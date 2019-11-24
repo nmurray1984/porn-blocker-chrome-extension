@@ -3,9 +3,7 @@ import * as tf from '@tensorflow/tfjs';
 import jQuery from 'jquery';
 import { image } from '@tensorflow/tfjs';
 
-const MOBILENET_MODEL_PATH = 'https://storage.googleapis.com/tfjs-models/tfjs/mobilenet_v1_0.25_224/model.json';
 const MOBILENSWFNET_MODEL_PATH = 'https://raw.githubusercontent.com/nmurray1984/MobileNSFW/master/trained_models/nsfw_v0.3-js/model.json';
-const FLOWERSNET_MODEL_PATH = 'https://raw.githubusercontent.com/nmurray1984/MobileNSFW/master/trained_models/flowers-js/model.json';
 const IMAGE_SIZE = 224;
 
 class BackgroundProcessing {
@@ -74,20 +72,9 @@ class BackgroundProcessing {
         resolve(null);
       };
       img.onload = function(e) {
-        //removed the block below for now to see how it impacts performance
         img.width = IMAGE_SIZE;
         img.height = IMAGE_SIZE;
         resolve(img);
-        /*
-        if ((img.height && img.height > 128) || (img.width && img.width > 128)) {
-          // Set image size for tf!
-          img.width = IMAGE_SIZE;
-          img.height = IMAGE_SIZE;
-          resolve(img);
-        }
-        // Let's skip all tiny images
-        resolve(null);
-        */
       }
       img.src = src;
     });
@@ -104,11 +91,8 @@ class BackgroundProcessing {
       const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
       return this.model.predict(batched);
     });
-
-    // Convert logits to probabilities and class names.
     const values = await logits.data();
     const totalTime = Math.floor(performance.now() - startTime);
-    //console.log(`Prediction done in ${totalTime}ms:`, values);
     return values;
   }
 
@@ -119,10 +103,6 @@ class BackgroundProcessing {
     canvas.getContext('2d').drawImage(imageElement, 0, 0);
     const str = canvas.toDataURL('image/jpeg');
     return str;
-  }
-
-  async postImage(imageDataUri) {
-    jQuery.post('http://localhost:8080/upload', {imageData: imageDataUri});
   }
 
   async analyzeImage(src) {
@@ -140,9 +120,6 @@ class BackgroundProcessing {
         if (img) {
           meta.predictions = await this.predict(img);
           const dataUri = await this.getDataUri(img);
-          if(meta.predictions[1] > 0.90 || meta.predictions[2] > 0.90) {
-            this.postImage(dataUri);
-          }
         }
       }
 
@@ -162,9 +139,8 @@ class BackgroundProcessing {
 
 var bg = new BackgroundProcessing();
 
-//chrome.contextMenus.removeAll();
 chrome.contextMenus.create({
-      title: "Report this - it shouldn't be blocked",
+      title: "This shouldn't be blocked - send Image URL",
       contexts: ["image"],
       onclick: function(info, tab) {
         chrome.tabs.sendMessage(tab.id, {
@@ -172,13 +148,3 @@ chrome.contextMenus.create({
         });
       }
 });
-
-/*
-chrome.contextMenus.create({
-  title: "Report this - it should be blocked",
-  contexts: ["image"],
-  onclick: function() {
-    alert('first');
-  }
-});
-*/

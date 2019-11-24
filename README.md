@@ -12,7 +12,7 @@ Porn detection with computer vision is a difficult problem with varying levels o
 
 As you are browsing the web, the extension intercepts all image calls. The images are then sent through the Mobile NSFW classifier using TensorflowJS. This all takes place on your device. When an image is classified as porn, it will be replaced in the website as a red X.
 
-If the image is classified incorrectly - say you are on a site where you know it is not porn, explicit, or racy, you have the option to report that image to help re-train the classifier so that these types of images are not detected as porn in the future. To do so, right click on the image and select "Report this - it shouldn't be blocked". 
+If the image is classified incorrectly - say you are on a site where you know it is not porn, explicit, or racy, you have the option to report that image to help re-train the classifier so that these types of images are not detected as porn in the future. To do so, right click on the image and select "This shouldn't be blocked - send Image URL". 
 
 All that we will receive is the URL of the image in question. We do not store any personal data or the actual image itself. If the image is not publically available, we wil not have access to it.
 
