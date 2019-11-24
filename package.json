@@ -41,6 +41,6 @@
   },
   "dependencies": {
     "@tensorflow/tfjs": "^1.2.11",
-    "jquery":"^3.4.1"
+    "jquery": "^3.4.1"
   }
 }
