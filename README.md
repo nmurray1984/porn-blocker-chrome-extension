@@ -1,6 +1,8 @@
 # Porn Blocker Chrome Extension
 
-Block porn images with AI. All images are scanned on your device and removed from the website if porn is detected.
+Try it out on the [Chrome Web Store](https://chrome.google.com/webstore/detail/porn-blocker/jdjldnifikfcmahncbamfcglceiegbje?hl=en)!
+
+Block porn images with AI. All images are scanned on your device and removed from the website if porn is detected. Uses the free [MobileNsfwNet](https://github.com/nmurray1984/MobileNsfwNet) neural network to detect racy and pornographic images.
 
 ## Purpose of this project
 
