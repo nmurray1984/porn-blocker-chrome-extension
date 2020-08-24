@@ -140,11 +140,21 @@ class BackgroundProcessing {
 var bg = new BackgroundProcessing();
 
 chrome.contextMenus.create({
-      title: "This shouldn't be blocked - send Image URL",
+      title: "This shouldn't be blocked & send Image URL",
       contexts: ["image"],
       onclick: function(info, tab) {
         chrome.tabs.sendMessage(tab.id, {
           action: 'DONT_BLOCK'
+        });
+      }
+});
+
+chrome.contextMenus.create({
+      title: "This SHOULD be blocked",
+      contexts: ["image"],
+      onclick: function(info, tab) {
+        chrome.tabs.sendMessage(tab.id, {
+          action: 'BLOCK_THIS_IMAGE'
         });
       }
 });
