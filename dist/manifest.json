@@ -6,13 +6,10 @@
   "author": "Nathan Murray",
   "permissions": [
     "activeTab",
-    "declarativeContent",
     "webRequest",
-    "webRequestBlocking",
-    "<all_urls>",
-    "storage",
     "tabs",
-    "contextMenus"
+    "contextMenus",
+    "<all_urls>"
   ],
   "background": {
     "scripts": ["src/background.js"],
