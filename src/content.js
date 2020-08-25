@@ -96,4 +96,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     mostRecentContextMenuImage = null;
   }
+  else if (message && message.action === 'BLOCK_THIS_IMAGE' && mostRecentContextMenuImage != null) {
+    console.log(mostRecentContextMenuImage);
+    mostRecentContextMenuImage.oldSrc = mostRecentContextMenuImage.src;
+    mostRecentContextMenuImage.src = imageReplacement;
+    if(mostRecentContextMenuImage.hasAttribute('srcset')) {
+        mostRecentContextMenuImage.removeAttribute('srcset')
+    }
+  }
 });
