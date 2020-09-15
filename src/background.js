@@ -72,8 +72,6 @@ class BackgroundProcessing {
         resolve(null);
       };
       img.onload = function(e) {
-        img.width = IMAGE_SIZE;
-        img.height = IMAGE_SIZE;
         resolve(img);
       }
       img.src = src;
@@ -81,18 +79,23 @@ class BackgroundProcessing {
   }
 
   async predict(imgElement) {
-    console.log('Predicting... ' + imgElement.src.substring(0,100));
     const startTime = performance.now();
     const logits = tf.tidy(() => {
-      const img = tf.browser.fromPixels(imgElement).toFloat();
-      //TODO check if output is consistent from model running locally to ensure values here
-      const offset = tf.scalar(127.5);
-      const normalized = img.div(offset);
-      const batched = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
-      return this.model.predict(batched);
+      const original = tf.browser.fromPixels(imgElement);
+      const resized = tf.image.resizeBilinear(original, [IMAGE_SIZE, IMAGE_SIZE]);
+      const normalized = resized.div(tf.scalar(255));
+      const reshaped = normalized.reshape([1, IMAGE_SIZE, IMAGE_SIZE, 3]);
+      return this.model.predict(reshaped);
     });
     const values = await logits.data();
     const totalTime = Math.floor(performance.now() - startTime);
+    const log = {
+      src: imgElement.src,
+      sfwScore: values[0],
+      racyScore: values[1],
+      nsfwScore: values[2]
+    }
+    console.log(log);
     return values;
   }
 
@@ -119,12 +122,11 @@ class BackgroundProcessing {
         const img = await this.loadImage(src);
         if (img) {
           meta.predictions = await this.predict(img);
-          const dataUri = await this.getDataUri(img);
+          const dataUri = await this.getDataUri(img);        
         }
       }
 
       if (meta.predictions) {
-        console.log("Sending predictions for: ", meta)
         chrome.tabs.sendMessage(meta.tabId, {
           action: 'IMAGE_PROCESSED',
           payload: {
