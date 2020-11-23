@@ -17,7 +17,7 @@ const setImageTitles = (messagePayload) => {
         //|| preds[1] > 0.70 
         //|| preds[2] > 0.70
         ) {
-        console.error('Image did not pass: ' + messagePayload.url, messagePayload);
+        console.info('Image did not pass: ' + messagePayload.url, messagePayload);
         img.oldSrc = img.src;
         img.src = imageReplacement;
         img.title = `${img.title}\n\n` + JSON.stringify(messagePayload.predictions);
@@ -83,21 +83,19 @@ var mostRecentContextMenuImage = null;
 document.addEventListener( "contextmenu", function(e) { mostRecentContextMenuImage = e.path[0];});
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message && message.action === 'DONT_BLOCK' && mostRecentContextMenuImage != null) {
-    console.log(mostRecentContextMenuImage);
     mostRecentContextMenuImage.src = mostRecentContextMenuImage.oldSrc;
     userFlagged[getHashCode(mostRecentContextMenuImage.src)] = true;
     
 
     var oReq = new XMLHttpRequest();
-    baseUrl = "https://nsfwserver6.azurewebsites.net/api/HttpTrigger1?code=OlaEukKoyHgxypAS7DpasualRRY7FwmsNqg/gfCD9yUfqKimvWyCoA==&url=";
+    baseUrl = "https://nsfw-server.herokuapp.com/?url=";
     finalUrl = baseUrl + encodeURI(mostRecentContextMenuImage.src);
     oReq.open("GET", finalUrl);
     oReq.send();
-
+    console.info('reported image via ' + finalUrl);
     mostRecentContextMenuImage = null;
   }
   else if (message && message.action === 'BLOCK_THIS_IMAGE' && mostRecentContextMenuImage != null) {
-    console.log(mostRecentContextMenuImage);
     mostRecentContextMenuImage.oldSrc = mostRecentContextMenuImage.src;
     mostRecentContextMenuImage.src = imageReplacement;
     if(mostRecentContextMenuImage.hasAttribute('srcset')) {

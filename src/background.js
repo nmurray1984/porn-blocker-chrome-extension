@@ -142,7 +142,7 @@ class BackgroundProcessing {
 var bg = new BackgroundProcessing();
 
 chrome.contextMenus.create({
-      title: "This shouldn't be blocked & send Image URL",
+      title: "Show this image and report image URL",
       contexts: ["image"],
       onclick: function(info, tab) {
         chrome.tabs.sendMessage(tab.id, {
@@ -152,7 +152,7 @@ chrome.contextMenus.create({
 });
 
 chrome.contextMenus.create({
-      title: "This SHOULD be blocked",
+      title: "Block this image",
       contexts: ["image"],
       onclick: function(info, tab) {
         chrome.tabs.sendMessage(tab.id, {

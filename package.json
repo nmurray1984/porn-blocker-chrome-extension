@@ -1,7 +1,7 @@
 {
   "name": "tensorflow-image-recognition-chrome-extension",
-  "version": "0.1.0",
-  "description": "Chrome browser extension for using TensorFlow image recognition",
+  "version": "0.5.0",
+  "description": "Recognizes and blocks porn and suggestive images. Help us make porn detection better by reporting images.",
   "keywords": [
     "tensorflow",
     "tf",
@@ -20,11 +20,16 @@
   ],
   "scripts": {
     "copy": "cp src/content.js dist/src/",
-    "build": "parcel build src/background.js -d dist/src/ -o background && npm run copy",
-    "watch": "npm run copy && parcel watch src/background.js --hmr-hostname localhost -d dist/src/ -o background"
+    "build": "parcel build --no-source-maps src/background.js -d dist/src/ -o background && npm run copy",
+    "watch": "npm run copy && parcel watch src/background.js --hmr-hostname localhost -d dist/src/ -o background",
+    "release": "cd dist/; zip -r ../release/porn-blocker-chrome-extension-v${npm_package_version}.zip *; cd .."
   },
-  "author": "Jouni Kontinen <jouni.kontinen___polarspin.com>",
+  "author": "Nathan Murray",
   "contributors": [
+    {
+      "name": "Nathan Murray",
+      "email": "nathan.d.murray__gmail"
+    },
     {
       "name": "Jouni Kontinen",
       "email": "jouni.kontinen___polarspin.com",
